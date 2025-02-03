@@ -86,6 +86,22 @@ void HuffmanCodes::build()
 	buildCodes(pq.top(), "");
 }
 
+std::string HuffmanCodes::encode()
+{
+	if (text.empty())
+		return "";
+
+	if (codes.empty())
+		build();
+
+	std::string encoded;
+
+	for (const char &c : text)
+		encoded += reverseCodes[c];
+
+	return std::move(encoded);
+}
+
 std::string HuffmanCodes::decode(const std::string &code) const
 {
 	if (codes.empty())
@@ -97,11 +113,11 @@ std::string HuffmanCodes::decode(const std::string &code) const
 
 	while (right <= code.size())
 	{
-		auto it = codes.find(code.substr(left, right - left));
+		std::unordered_map<std::string, char>::const_iterator it = codes.find(code.substr(left, right - left));
 
 		if (it != codes.end())
 		{
-			decoded += it->first;
+			decoded += it->second;
 			left = right;
 		}
 
@@ -116,6 +132,7 @@ void HuffmanCodes::buildCodes(Node *root, std::string &&code)
 	if (root->data)
 	{
 		codes[code] = root->data;
+		reverseCodes[root->data] = code;
 		return;
 	}
 

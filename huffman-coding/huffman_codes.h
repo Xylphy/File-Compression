@@ -30,12 +30,14 @@ public:
 	~HuffmanCodes();
 
 	void build();
+	std::string encode();
 	std::string decode(const std::string &code) const;
 
 private:
 	std::string text;
 	std::priority_queue<Node *, std::vector<Node *>, std::function<bool(const Node *, Node *)>> pq;
 	std::unordered_map<std::string, char> codes;
+	std::unordered_map<char, std::string> reverseCodes;
 
 	void buildCodes(Node *root, std::string &&code);
 
