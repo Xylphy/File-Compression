@@ -1,4 +1,5 @@
 #include "huffman_codes.h"
+#include <string>
 #include <unordered_map>
 #include <utility>
 
@@ -85,12 +86,36 @@ void HuffmanCodes::build()
 	buildCodes(pq.top(), "");
 }
 
+std::string HuffmanCodes::decode(const std::string &code) const
+{
+	if (codes.empty())
+		return "";
+
+	std::string decoded;
+
+	size_t left = 0, right = 1;
+
+	while (right <= code.size())
+	{
+		auto it = codes.find(code.substr(left, right - left));
+
+		if (it != codes.end())
+		{
+			decoded += it->first;
+			left = right;
+		}
+
+		right++;
+	}
+
+	return std::move(decoded);
+}
 
 void HuffmanCodes::buildCodes(Node *root, std::string &&code)
 {
 	if (root->data)
 	{
-		codes[root->data] = code;
+		codes[code] = root->data;
 		return;
 	}
 
@@ -100,8 +125,8 @@ void HuffmanCodes::buildCodes(Node *root, std::string &&code)
 
 std::ostream &operator<<(std::ostream &os, const HuffmanCodes &hc)
 {
-	for (const std::pair<const char, std::string> &p : hc.codes)
-		os << p.first << " : " << p.second << std::endl;
+	for (const std::pair<const std::string, char> &p : hc.codes)
+		os << p.second << " : " << p.first << std::endl;
 	return os;
 }
 

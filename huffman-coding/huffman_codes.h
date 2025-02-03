@@ -35,7 +35,7 @@ public:
 private:
 	std::string text;
 	std::priority_queue<Node *, std::vector<Node *>, std::function<bool(const Node *, Node *)>> pq;
-	std::unordered_map<char, std::string> codes;
+	std::unordered_map<std::string, char> codes;
 
 	void buildCodes(Node *root, std::string &&code);
 
